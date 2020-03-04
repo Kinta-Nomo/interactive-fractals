@@ -1,6 +1,19 @@
 
 let vertices = []
+
 let size = 2
+let nextSize = 2;
+let radiusFactor = 3;
+let maxDepth = 3
+let showCircle = true;
+let showPath = true;
+
+function updateSpirograph(){
+    vertices = [];
+    size = nextSize;
+    mom = new Circle(200,200, 100, maxDepth);
+    mom.createChild();
+}
 
 Circle = function(x, y, r, depth){
   this.x = x
@@ -23,7 +36,7 @@ Circle = function(x, y, r, depth){
     if (this.depth > 0){
       for (var i = 0; i<size; i++){
         angle = Math.PI*2/size
-        this.child.push(new Circle(this.x+Math.cos(angle*i)*this.radius, this.y+Math.sin(angle*i)*this.radius, this.radius/2, this.depth-1))
+        this.child.push(new Circle(this.x+Math.cos(angle*i)*this.radius, this.y+Math.sin(angle*i)*this.radius, this.radius/radiusFactor, this.depth-1))
         this.child[this.child.length-1].createChild();
       }
     }
@@ -50,19 +63,26 @@ Circle = function(x, y, r, depth){
 let mom;
 function setup() {
   createCanvas(400, 400);
-  mom = new Circle(200,200, 100, 5);
+  mom = new Circle(200,200, 100, 2);
   mom.createChild();
 }
 
 function draw() {
   background(220);
   strokeWeight(2);
-  for (var i in vertices){
-    vert = vertices[i];
-    point(vert[0], vert[1])
+
+  if (showPath){
+    for (var i in vertices){
+       vert = vertices[i];
+       set(vert[0], vert[1] , 0)
+    }
+    updatePixels();
   }
-  noFill();;
-  strokeWeight(5)
-  mom.draw();
+  
+  noFill();
+  strokeWeight(5);
+  if (showCircle){
+    mom.draw();
+  }
   mom.rotateChild();
 }

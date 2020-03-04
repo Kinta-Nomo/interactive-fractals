@@ -5,6 +5,66 @@
         <script type ="text/javascript" src = "/spiral.js"></script>
     </head>
     <body>
+        <div>
+            <p></p>circle num:
+            <div class="slidecontainer">
+                <input type="range" min="1" max="10" value="2" class="slider" id="circleInput">
+                Value: <span id="circle"> 2 </span>
+            </div>
+            <p></p>radius factor:
+            <div class="slidecontainer">
+                <input type="range" min="0" max="50" value="2" class="slider" id="radiusInput">
+                Value: <span id="radius"> 2 </span>
+            </div>
+            <p></p>depth:
+            <div class="slidecontainer">
+                <input type="range" min="0" max="10" value="3" class="slider" id="depthInput">
+                Value: <span id="depth"> 3 </span>
+            </div>
 
+            <button onclick="updateSpirograph(); ">update</button>
+
+            Show circle: <input type="checkbox" id="visibilityChecker" onclick="updateVisibility()" checked>
+            Show Path: <input type="checkbox" id="pathChecker" onclick="updatePath()" checked>
+
+        </div>
+
+        
+        <script type="text/javascript">
+            var slider = document.getElementById("circleInput");
+            var slider2 = document.getElementById("radiusInput");
+            var slider3 = document.getElementById("depthInput");
+            var output = document.getElementById("circle");
+            var output2 = document.getElementById("radius");
+            var output3 = document.getElementById("depth");
+            var checkbox = document.getElementById("visibilityChecker");
+            var checkbox2 = document.getElementById("pathChecker");
+            
+            //output.innerHTML = slider.value;
+            //output2.innerHTML = slider2.value;
+            
+            slider.oninput = function() {
+                output.innerHTML = this.value;
+                nextSize = int(this.value);
+            }
+
+            slider2.oninput = function() {
+                output2.innerHTML = this.value/10;
+                radiusFactor = int(this.value)/10;
+            }
+            
+            slider3.oninput = function() {
+                output3.innerHTML = this.value;
+                maxDepth = int(this.value);
+            }
+
+            function updateVisibility(){
+                showCircle = checkbox.checked;
+            }
+
+            function updatePath(){
+                showPath = checkbox2.checked;
+            }
+        </script>
     </body>
 </html>
