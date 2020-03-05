@@ -1,128 +1,63 @@
 <html>
     <head>
-        <title>Spiral fractal</title>
-        <script type ="text/javascript" src = "/p5.min.js"></script>
-        <script type ="text/javascript" src = "/spiral.js"></script>
+        <style>
+            body {margin:25px;}
+
+            .playButton {
+                background-color: rgb(99, 123, 230); /* Green */
+                border: none;
+                color: white;
+                padding: 15px 32px;
+                text-align: center;
+                font-size: 16px;
+            }
+
+            .playButton:hover {
+                border: 2px solid rgb(64, 42, 114)
+            }
+                        
+            div.polaroid {
+                width:20%;
+                background-color: white;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+                margin-bottom: 25px;
+            }
+            div.polaroid:hover {
+                border: 2px solid rgb(64, 42, 114)
+            }
+
+            div.container {
+                text-align: center;
+                padding: 10px 20px;
+            }
+
+            p{
+                font-family: Arial, Helvetica, sans-serif;
+            }
+        </style>
     </head>
     <body>
         <div>
-            <div style='float:left; border: 2px solid #000000;margin-left: 10px;'>
-                <div style='float:left; margin: 10px;'>
-                    <div style='margin-left: 10px;'>
-                        <p></p>circle num:
-                        <div class="slidecontainer">
-                            <input type="range" min="1" max="10" value="2" class="slider" id="circleInput">
-                            Value: <span id="circle"> 2 </span>
-                        </div>
-                    </div>
-                    <div style='margin-left: 10px;'>
-                        <p></p>radius factor:
-                        <div class="slidecontainer" >
-                            <input type="range" min="0" max="50" value="30" class="slider" id="radiusInput">
-                            Value: <span id="radius"> 3 </span>
-                        </div>
-                    </div>
-                    <div style='margin-left: 10px;'>
-                        <p></p>depth:
-                        <div class="slidecontainer">
-                            <input type="range" min="0" max="10" value="3" class="slider" id="depthInput">
-                            Value: <span id="depth"> 3 </span>
-                        </div>
-                    </div>
-
+            <div class="polaroid" onclick= "document.location = 'spiral.html'" style="width:20%" >
+                <div class="container" style="background-color: rgb(99, 123, 230); /* Green */
+                border: none;
+                color: white;
+                padding: 15px 32px;
+                text-align: center;
+                font-size: 16px;">
+                    <p>trochoidile</p>
                 </div>
-
-                <div style='float:left; margin: 10px; margin-right: 20px;'>
+                <img src="images/trochoidile1.PNG" alt="5 Terre" style="width:100%">
+                <div class="container">
+                    <p>A recursive spiralogram. You can adjust the parameters to try
+                        out different shapes and patterns. You can choose to display
+                        the path it took, or to display the spiralogram itself.
+                    </p>
+                </div>
+                <a href="https://github.com/Kinta-Nomo/interactive-fractals/blob/master/spiral.js">lnk</a>
                 
-                    <div style='margin-left: 10px;'>
-                        <p></p>mother size:
-                        <div class="slidecontainer">
-                            <input type="range" min="1" max="150" value="100" class="slider" id="motherInput">
-                            Value: <span id="mother"> 100 </span>
-                        </div>
-                    </div>
-                    <div style='margin-left: 10px;'>
-                        <p></p>circle spacing:
-                        <div class="slidecontainer">
-                            <input type="range" min="-500" max="100" value="0" class="slider" id="spaceInput">
-                            Value: <span id="space"> 0 </span>
-                        </div>
-                    </div>
-                    <div style='margin-left: 10px; margin-top: 30px;'>
-                        Show circle: <input type="checkbox" id="visibilityChecker" onclick="updateVisibility()" checked>
-                        Show Path: <input type="checkbox" id="pathChecker" onclick="updatePath()" checked>
-                    </div>
-                </div>
             </div>
-
-            <p></p>
-            </br></br></br></br></br></br></br></br></br></br></br></br>
-            <div style='float:left; border: 2px solid #000000;margin-left: 10px;'>
-                <div style = "margin: 10px;"">
-                    <button onclick="updateSpirograph(); ">update</button>
-                </div>
-            </div>
-
-        </br></br>
-            <p></p>
-            <div id="sketch-holder" style='float:left; margin-left: 10px;'>
-                <!-- Our sketch will go here! -->
-            </div>
-
+              
         </div>
-
-        
-        <script type="text/javascript">
-            var slider = document.getElementById("circleInput");
-            var slider2 = document.getElementById("radiusInput");
-            var slider3 = document.getElementById("depthInput");
-            var slider4 = document.getElementById("motherInput");
-            var slider5 = document.getElementById("spaceInput");
-
-            var output = document.getElementById("circle");
-            var output2 = document.getElementById("radius");
-            var output3 = document.getElementById("depth");
-            var output4 = document.getElementById("mother");
-            var output5 = document.getElementById("space");
-
-            var checkbox = document.getElementById("visibilityChecker");
-            var checkbox2 = document.getElementById("pathChecker");
-            
-            //output.innerHTML = slider.value;
-            //output2.innerHTML = slider2.value;
-            
-            slider.oninput = function() {
-                output.innerHTML = this.value;
-                nextSize = int(this.value);
-            }
-
-            slider2.oninput = function() {
-                output2.innerHTML = this.value/10;
-                radiusFactor = int(this.value)/10;
-            }
-            
-            slider3.oninput = function() {
-                output3.innerHTML = this.value;
-                maxDepth = int(this.value);
-            }
-
-            slider4.oninput = function() {
-                output4.innerHTML = this.value;
-                motherSize = int(this.value);
-            }
-
-            slider5.oninput = function() {
-                output5.innerHTML = this.value;
-                nextCircleDistance = int(this.value);
-            }
-
-            function updateVisibility(){
-                showCircle = checkbox.checked;
-            }
-
-            function updatePath(){
-                showPath = checkbox2.checked;
-            }
-        </script>
     </body>
 </html>

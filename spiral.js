@@ -1,5 +1,4 @@
 
-
 let vertices = [];
 
 let size = 2;
@@ -7,6 +6,7 @@ let nextSize = 2;
 let radiusFactor = 3;
 let maxDepth = 3;
 let motherSize = 100;
+let nextMotherSize = 100;
 
 let circleDistance = 0;
 let nextCircleDistance = 0;
@@ -18,7 +18,7 @@ function updateSpirograph(){
     vertices = [];
     size = nextSize;
     circleDistance = nextCircleDistance;
-    console.log(motherSize)
+    motherSize = nextMotherSize;
     mom = new Circle(200,200, motherSize, maxDepth);
     mom.createChild();
 }

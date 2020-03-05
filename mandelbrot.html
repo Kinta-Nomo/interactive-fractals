@@ -1,0 +1,55 @@
+<html >
+<head >
+    <script src="/p5.min.js"></script>
+    <script type="text/javascript" src="/mandelbrot_v4.js"></script>
+    <!-- <script type="text/javascript" src="/3D_Rotate/3D_RotateData.js"></script> --> 
+    <!-- <script type="text/javascript" src="/3D_Rotate/3D_Rotate_finale.js"></script> -->
+</head>
+<body >
+    <button onclick="switchFractal(0); ">Mandelbrot</button>
+    <button onclick="switchFractal(1); ">Julia</button>
+    <button onclick="switchFractal(2); ">Sunken</button>
+
+    <div>
+        <p></p>c value real:
+        <div class="slidecontainer">
+            <input type="range" min="-50" max="50" value="0" class="slider" id="realcInput">
+            Value: <span id="realc"> 0 </span>
+        </div>
+        <p></p>c value imaginary:
+        <div class="slidecontainer">
+            <input type="range" min="-50" max="50" value="0" class="slider" id="imagcInput">
+            Value: <span id="imagc"> 0 </span>
+        </div>
+    </div>
+    
+    <p></p>
+    <div id="sketch-holder">
+        <!-- Our sketch will go here! -->
+    </div>
+
+    <script type="text/javascript">
+        var slider = document.getElementById("realcInput");
+        var slider2 = document.getElementById("imagcInput");
+        var output = document.getElementById("realc");
+        var output2 = document.getElementById("imagc");
+        
+        //output.innerHTML = slider.value;
+        //output2.innerHTML = slider2.value;
+        
+        slider.oninput = function() {
+            output.innerHTML = this.value/50;
+            julia_cr = this.value/50;
+            drawMandelbrot(centerx, centery);
+            updateMandelbrot()
+        }
+
+        slider2.oninput = function() {
+            output2.innerHTML = this.value/50;
+            julia_ci = this.value/50;
+            drawMandelbrot(centerx, centery);
+            updateMandelbrot()
+        //   var output2 = slider2.value;
+        }</script>
+</body>
+</html>
