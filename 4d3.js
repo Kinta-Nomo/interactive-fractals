@@ -1,14 +1,16 @@
 
-let screenDistance = 0.1; //determined from player's direction, usually right in front of player
+let screenDistance = 1; //determined from player's direction, usually right in front of player
 
-let screenDistancew = 0.1; //determined from player's direction, usually right in front of player
+let screenDistancew = 1; //determined from player's direction, usually right in front of player
 
-let playerPos = [0, -200];
+
+let scaler = 5;
+let resizer = 100; //resize the projected points
+let resizerw = 100; //resize the projected points
+
+// let playerPos = [0, -200];
 let playerPos2 = [0, 0, -200];
 let playerPos3 = [0, 0, 0, -200];
-
-let scaler = 10000;
-let resizer = 100; //resize the projected points
 
 let angles = [0, 0, 0, 0, 0, 0] 
 let angleSpeeds = [0, 0, 0, 0, 0, 0];  
@@ -65,11 +67,11 @@ Point = function(x=null, y=null, z=null, w=null){
 
     this.draw = function(){
         projectedPoint = project4d(this.x, this.y, this.z, this.w)
-        projectedPoint2 = project3d(projectedPoint[0]*resizer, projectedPoint[1]*resizer, projectedPoint[2]*resizer)
+        // console.log(projectedPoint)
+        projectedPoint2 = project3d(projectedPoint[0], projectedPoint[1], projectedPoint[2])
         dist = ((this.x-playerPos3[0])**2+(this.y-playerPos3[1])**2+(this.z-playerPos3[2])**2+(this.w-playerPos3[3])**2)**0.5
         strokeWeight(1000/dist);
-        // console.log
-        point(projectedPoint2[0] * scaler, projectedPoint2[1] * scaler);
+        point(projectedPoint2[0]*scaler, projectedPoint2[1]*scaler);
     }
 
     this.rotate = function(axy, axz, axw, ayz, ayw, azw){
@@ -104,17 +106,17 @@ function project2d(x, y){
 }
 
 function project3d(x, y, z){
-    return [((x-playerPos2[0])/(z-playerPos2[2]))*screenDistance , 
-            ((y-playerPos2[1])/(z-playerPos2[2]))*screenDistance, 
+    return [((x-playerPos2[0])/(z-playerPos2[2]))*screenDistance * resizer, 
+            ((y-playerPos2[1])/(z-playerPos2[2]))*screenDistance * resizer, 
             null, 
             null]
 }
 
 function project4d(x, y, z, w){
-    return [((x-playerPos3[0])/(w-playerPos3[3]))*screenDistancew , 
-            ((y-playerPos3[1])/(w-playerPos3[3]))*screenDistancew, 
-            ((z-playerPos3[2])/(w-playerPos3[3]))*screenDistancew, 
-            null]
+    return [((x-playerPos3[0])/(w-playerPos3[3]))*screenDistancew * resizerw, 
+            ((y-playerPos3[1])/(w-playerPos3[3]))*screenDistancew * resizerw, 
+            ((z-playerPos3[2])/(w-playerPos3[3]))*screenDistancew * resizerw,
+            null ]
 }
 //==========
 
@@ -137,20 +139,20 @@ function draw(){
 
     
     if(keyIsDown(16)){
-        playerPos2[1] += 1
+        playerPos2[1] += 5
     }if(keyIsDown(32)){
-        playerPos2[1] -= 1
+        playerPos2[1] -= 5
     }
     
     if(keyIsDown(87)){
-        playerPos2[2] += 1
+        playerPos2[2] += 5
     }if(keyIsDown(83)){
-        playerPos2[2] -= 1
+        playerPos2[2] -= 5
     }
     
     if(keyIsDown(68)){
-        playerPos2[0] += 1
+        playerPos2[0] += 5
     }if(keyIsDown(65)){
-        playerPos2[0] -= 1
+        playerPos2[0] -= 5
     }
 }

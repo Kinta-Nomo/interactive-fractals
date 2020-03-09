@@ -1,61 +1,37 @@
 
-let original = [[-100, -100, -100, 100],
-[100, -100, -100, 100],
-[100, 100, -100, 100],
-[-100, 100, -100, 100],
+let screenDistancew = 1; //determined from player's direction, usually right in front of player
 
-[-100, -100, 100, 100],
-[100, -100, 100, 100],
-[100, 100, 100, 100],
-[-100, 100, 100, 100],
+let scaler = 5;
+let resizerw = 100; //resize the projected points
 
-[-100, -100, -100, -100],
-[100, -100, -100, -100],
-[100, 100, -100, -100],
-[-100, 100, -100, -100],
+let playerPos = [0, 0, 0, -200];
 
-[-100, -100, 100, -100],
-[100, -100, 100, -100],
-[100, 100, 100, -100],
-[-100, 100, 100, -100]];
+let angles = [0, 0, 0, 0, 0, 0] 
+let angleSpeeds = [0, 0, 0, 0, 0, 0];  
 
-let screenDepth = 100; //points to z
-let wDepth = 100; //points to w
 
-let rotationOrigin = [0, 0, 0];
-
-function setup() {
-    createCanvas(600, 600);
-    background(0);
-}
-
-function project(value1, value2) {
-    //projected point on the plane (2D)
-    return (screenDepth / value2) * value1;
-}
-
-function rotation4zw(x, y, z, w, a){
-    return [x,
-        y,
-        z * Math.cos(a) + (w * -Math.sin(a)),
-        z * Math.sin(a) + (w * Math.cos(a))];
-}
 function rotation4xy(x, y, z, w, a){
     return [x * Math.cos(a) + y * (-Math.sin(a)),
         x * Math.sin(a) + y * Math.cos(a),
         z,
         w];
 }
-function rotation4yz(x, y, z, w, a){
-    return [x,
-            y * Math.cos(a) + z * (-Math.sin(a)),
-            y * Math.sin(a) + z * Math.cos(a),
-            w];
-}
 function rotation4xz(x, y, z, w, a){
     return [x * Math.cos(a) + z * (-Math.sin(a)),
             y,
             x * Math.sin(a) + z * Math.cos(a),
+            w];
+}
+function rotation4xw(x, y, z, w, a){
+    return [x * Math.cos(a) + w * (-Math.sin(a)),
+            y,
+            z,
+            x * Math.sin(a) + w * Math.cos(a)];
+}
+function rotation4yz(x, y, z, w, a){
+    return [x,
+            y * Math.cos(a) + z * (-Math.sin(a)),
+            y * Math.sin(a) + z * Math.cos(a),
             w];
 }
 function rotation4yw(x, y, z, w, a){
@@ -64,82 +40,143 @@ function rotation4yw(x, y, z, w, a){
             z,
             y * Math.sin(a) + w * Math.cos(a)];
 }
-function rotation4xw(x, y, z, w, a){
-    return [x * Math.cos(a) + w * (-Math.sin(a)),
-            y,
-            z,
-            x * Math.sin(a) + w * Math.cos(a)];
+function rotation4zw(x, y, z, w, a){
+    return [x,
+        y,
+        z * Math.cos(a) + (w * -Math.sin(a)),
+        z * Math.sin(a) + (w * Math.cos(a))];
 }
 
-let axy = 0;
-let axz = 0;
-let axw = 0;
-let ayz = 0;
-let ayw = 0;
-let azw = 0;
 
-let angle = 0
-function draw() {
-    background(0);
-    translate(300, 300);
+Point = function(x=null, y=null, z=null, w=null){
+    this.origx = x;
+    this.origy = y;
+    this.origz = z;
+    this.origw = w;
+    this.x = x;
+    this.y = y;
+    this.z = z;
+    this.w = w;
+    this.dimension = (x!=null) + (y!=null) + (z!=null) + (w!=null);
 
-    strokeWeight(5);
-    newCoordinate = [];
-    nextOriginal = [];
-    for (var i in original) {
-
-        var x = original[i][0];
-        var y = original[i][1];
-        var z = original[i][2];
-        var W = original[i][3];
-
-        //=====rotating in 3 axis=====
-
-        var rot = rotation4xy(x,y,z,W, axy);
-        var rot2 = rotation4xz(rot[0], rot[1], rot[2], rot[3], axz)
-        var rot3 = rotation4xw(rot2[0], rot2[1], rot2[2], rot2[3], axw)
-        var rot4 = rotation4yz(rot3[0], rot3[1], rot3[2], rot3[3], ayz)
-        var rot5 = rotation4yw(rot4[0], rot4[1], rot4[2], rot4[3], ayw)
-        var rot6 = rotation4zw(rot5[0], rot5[1], rot5[2], rot5[3], azw)
-        nextOriginal.push(rot6)
-
-        //============================
-
-        var w = 1 / (wDepth - rot6[3]);
-        var np = [[rot6[0] * w], [rot6[1] * w], [rot6[2] * w]];
-        newCoordinate.push([np[0][0], np[1][0], np[2][0] + 250]);
-
-        point(project(newCoordinate[i][0], newCoordinate[i][2]) * 100, project(newCoordinate[i][1], newCoordinate[i][2]) * 100);
-
+    this.draw = function(){
+        projectedPoint = project4d(this.x, this.y, this.z, this.w)
+        dist = ((this.x-playerPos[0])**2+(this.y-playerPos[1])**2+(this.z-playerPos[2])**2+(this.w-playerPos[3])**2)**0.5
+        // translate(projectedPoint[0], projectedPoint[1], projectedPoint[2]);
+        // box();
+        strokeWeight(10);
+        point(projectedPoint[0], projectedPoint[1], projectedPoint[2])
+        // console.log(projectedPoint)
+        // projectedPoint2 = project3d(projectedPoint[0], projectedPoint[1], projectedPoint[2])
+        // dist3d = ((this.x-playerPos3[0])**2+(this.y-playerPos3[1])**2+(this.z-playerPos3[2])**2)**0.5;
+        // stroke(2550/dist3d);
+        // strokeWeight(1000/dist);
+        // point(projectedPoint2[0]*scaler, projectedPoint2[1]*scaler);
     }
-    // console.log(nextOriginal[0][0])
-    original = nextOriginal;
 
-    //plotting projected 3d
-    // stroke(255, 0, 0);
-    // for (var i in newCoordinate) {
-    //     point(newCoordinate[i][0] * 100, newCoordinate[i][1] * 100);
-    // }
+    this.rotate = function(axy, axz, axw, ayz, ayw, azw){
+        rotated1 = rotation4xy(this.origx, this.origy, this.origz, this.origw, axy)
+        rotated2 = rotation4xz(rotated1[0], rotated1[1], rotated1[2], rotated1[3], axz)
+        rotated3 = rotation4xw(rotated2[0], rotated2[1], rotated2[2], rotated2[3], axw)
+        rotated4 = rotation4yz(rotated3[0], rotated3[1], rotated3[2], rotated3[3], ayz)
+        rotated5 = rotation4yw(rotated4[0], rotated4[1], rotated4[2], rotated4[3], ayw)
+        rotated6 = rotation4zw(rotated5[0], rotated5[1], rotated5[2], rotated5[3], azw)
+        this.x = rotated6[0];
+        this.y = rotated6[1];
+        this.z = rotated6[2];
+        this.w = rotated6[3];
+    }
+}
 
-    // for (var i in nextOriginal){
-    //     p = nextOriginal[i]
-    //     // console.log(((p[0])**2 + (p[1])**2 + (p[2])**2 + (p[3])**2)**0.5);
-    //     nextOriginal[i] = ((p[0])**2 + (p[1])**2 + (p[2])**2 + (p[3])**2)**0.5
-    //     // console.log(((p[0])**2 + (p[1])**2 + (p[2])**2 + (p[3])**2)**0.5);
-    // }
+let data = []
+// for (var i = 0; i<2; i++){
+//     for (var j = 0; j<2; j++){
+//         for (var k = 0; k<2; k++){
+//             // data.push(new Point(i*200-100, j*200-100, k*200-100));
+//             for (var l = 0; l<2; l++){
+//                 data.push(new Point(i*200-100, j*200-100, k*200-100, l*200-100));
+//             }
+//         }
+//     }
+// }
 
-    //plotting double projected 3d
-    strokeWeight(2);
-    stroke(0, 0, 255);
-    // for (var i = 0; i < original.length; i++) {
-        for (var i in newCoordinate){
-            // strokeWeight(nextOriginal[i]);
-            // console.log(nextOriginal[i])
-            point(project(newCoordinate[i][0], newCoordinate[i][2]) * 100,
-                     project(newCoordinate[i][1], newCoordinate[i][2]) * 100);
+
+function sponge(x, y, z, w, len, depth){
+    if (depth <= 0){
+        for (var i = 0; i<2; i++){
+            for (var j = 0; j<2; j++){
+                for (var k = 0; k<2; k++){
+                    for (var l = 0; l<2; l++){
+                        data.push(new Point(x + (len*i), y + (len*j), z + (len*k), w + (len*l)));
+                    }
+                }
+            }
         }
-        
-    // }
-    angle += 0.02;
+    }else{
+        for (var i = 0; i<2; i++){
+            for (var j = 0; j<2; j++){
+                for (var k = 0; k<2; k++){
+                    for (var l = 0; l<2; l++){
+                        sponge(x + (2*(len/3)*i), y + (2*(len/3)*j), z + (2*(len/3)*k), w + (2*(len/3)*l), len/3, depth-1)
+                    }
+                }
+            }
+        }
+    }
+}
 
+sponge(-50, -50, -50, -50, 100, 1)
+
+//=====projectors=====
+
+function project4d(x, y, z, w){
+    return [((x-playerPos[0])/(w-playerPos[3]))*screenDistancew * resizerw, 
+            ((y-playerPos[1])/(w-playerPos[3]))*screenDistancew * resizerw, 
+            ((z-playerPos[2])/(w-playerPos[3]))*screenDistancew * resizerw,
+            null ]
+}
+
+//==========
+
+function setup(){
+    createCanvas(500,500, WEBGL);
+    strokeWeight(5);
+    stroke(255);
+}
+
+function draw(){
+    background(0);
+    translate(250, 250);
+    for (var a in angles){
+        angles[a] += angleSpeeds[a];
+    }
+    for (var p in data){
+        data[p].rotate(angles[0], angles[1], angles[2], angles[3], angles[4], angles[5])
+        data[p].draw()
+    }
+
+    
+    if(keyIsDown(16)){
+        playerPos[1] += 5
+    }if(keyIsDown(32)){
+        playerPos[1] -= 5
+    }
+    
+    if(keyIsDown(87)){
+        playerPos[2] += 5
+    }if(keyIsDown(83)){
+        playerPos[2] -= 5
+    }
+    
+    if(keyIsDown(68)){
+        playerPos[0] += 5
+    }if(keyIsDown(65)){
+        playerPos[0] -= 5
+    }
+
+    if(keyIsDown(81)){
+        playerPos[3] += 5
+    }if(keyIsDown(69)){
+        playerPos[3] -= 5
+    }
 }
