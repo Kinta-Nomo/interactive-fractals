@@ -7,7 +7,7 @@ let resizerw = 100; //resize the projected points
 let playerPos = [0, 0, 0, -200];
 
 let angles = [0, 0, 0, 0, 0, 0] 
-let angleSpeeds = [0, 0, 0, 0, 0, 0];  
+let angleSpeeds = [0, 0.01, 0, 0, 0.01, 0];  
 
 
 function rotation4xy(x, y, z, w, a){
@@ -64,8 +64,9 @@ Point = function(x=null, y=null, z=null, w=null){
         dist = ((this.x-playerPos[0])**2+(this.y-playerPos[1])**2+(this.z-playerPos[2])**2+(this.w-playerPos[3])**2)**0.5
         // translate(projectedPoint[0], projectedPoint[1], projectedPoint[2]);
         // box();
-        strokeWeight(10);
-        point(projectedPoint[0], projectedPoint[1], projectedPoint[2])
+        strokeWeight(2);
+        vertex(projectedPoint[0] * scaler, projectedPoint[1] * scaler, projectedPoint[2] * scaler)
+        // console.log( [projectedPoint[0], projectedPoint[1], projectedPoint[2]] )
         // console.log(projectedPoint)
         // projectedPoint2 = project3d(projectedPoint[0], projectedPoint[1], projectedPoint[2])
         // dist3d = ((this.x-playerPos3[0])**2+(this.y-playerPos3[1])**2+(this.z-playerPos3[2])**2)**0.5;
@@ -100,18 +101,25 @@ let data = []
 //     }
 // }
 
+function cube(){
+
+}
 
 function sponge(x, y, z, w, len, depth){
     if (depth <= 0){
+        let hypercube = [];
         for (var i = 0; i<2; i++){
             for (var j = 0; j<2; j++){
                 for (var k = 0; k<2; k++){
                     for (var l = 0; l<2; l++){
-                        data.push(new Point(x + (len*i), y + (len*j), z + (len*k), w + (len*l)));
+                        // face.push(new Point(x + (len*i), y + (len*j), z + (len*k), w + (len*l)))
+                        hypercube.push(new Point(x + (len*i), y + (len*j), z + (len*k), w + (len*l)))
+                        // data.push(new Point(x + (len*i), y + (len*j), z + (len*k), w + (len*l)));
                     }
                 }
             }
         }
+        data.push(hypercube);
     }else{
         for (var i = 0; i<2; i++){
             for (var j = 0; j<2; j++){
@@ -142,19 +150,24 @@ function setup(){
     createCanvas(500,500, WEBGL);
     strokeWeight(5);
     stroke(255);
+    fill(255, 0, 0);
 }
 
 function draw(){
     background(0);
-    translate(250, 250);
+    // translate(250, 250);
     for (var a in angles){
         angles[a] += angleSpeeds[a];
     }
-    for (var p in data){
-        data[p].rotate(angles[0], angles[1], angles[2], angles[3], angles[4], angles[5])
-        data[p].draw()
+    for (var hyperobject in data){
+        beginShape();
+        for (var p in data[hyperobject]){
+            data[hyperobject][p].rotate(angles[0], angles[1], angles[2], angles[3], angles[4], angles[5])
+            data[hyperobject][p].draw()
+        }
+        endShape(CLOSE);
     }
-
+    // debugger
     
     if(keyIsDown(16)){
         playerPos[1] += 5
@@ -163,9 +176,9 @@ function draw(){
     }
     
     if(keyIsDown(87)){
-        playerPos[2] += 5
-    }if(keyIsDown(83)){
         playerPos[2] -= 5
+    }if(keyIsDown(83)){
+        playerPos[2] += 5
     }
     
     if(keyIsDown(68)){
