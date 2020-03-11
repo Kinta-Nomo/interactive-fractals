@@ -1,7 +1,7 @@
 
 let screenDistancew = 1; //determined from player's direction, usually right in front of player
 
-let scaler = 5;
+let zoom = 5;
 let resizerw = 100; //resize the projected points
 
 let playerPos = [0, 0, 0, -200];
@@ -64,7 +64,7 @@ Point = function(coordinate){
         projectedPoint = project4d(this.x, this.y, this.z, this.w)
         // d = ((projectedPoint[0]-playerPos[0])**2+(projectedPoint[1]-playerPos[1])**2+(projectedPoint[2]-playerPos[2])**2)**0.5
         // stroke(d*5)
-        vertex(projectedPoint[0] * scaler, projectedPoint[1] * scaler, projectedPoint[2] * scaler)
+        vertex(projectedPoint[0] * zoom, projectedPoint[1] * zoom, projectedPoint[2] * zoom)
     }
 
     this.rotate = function(axy, axz, axw, ayz, ayw, azw){
@@ -90,7 +90,7 @@ function cube(vertices){
     data.push([new Point(vertices[0]), new Point(vertices[1]), new Point(vertices[6]), new Point(vertices[7])])
     data.push([new Point(vertices[1]), new Point(vertices[2]), new Point(vertices[5]), new Point(vertices[6])])
     data.push([new Point(vertices[0]), new Point(vertices[3]), new Point(vertices[4]), new Point(vertices[7])])
-}
+}3
 
 function tesseract(x, y, z, w, len){
     cube([[x,y,z,w], [x+len,y,z,w], [x+len,y+len,z,w], [x,y+len,z,w], [x,y+len,z+len,w], [x+len,y+len,z+len,w], [x+len,y,z+len,w], [x,y,z+len,w]])
@@ -103,42 +103,18 @@ function tesseract(x, y, z, w, len){
     cube([[x,y,z,w], [x,y+len,z,w], [x,y+len,z+len,w], [x,y,z+len,w], [x,y,z+len,w+len], [x,y+len,z+len,w+len], [x,y+len,z,w+len], [x,y,z,w+len]])
     cube([[x,y,z,w], [x,y,z+len,w], [x,y,z+len,w+len], [x,y,z,w+len], [x+len,y,z,w+len], [x+len,y,z+len,w+len], [x+len,y,z+len,w], [x+len,y,z,w]])
     cube([[x,y,z,w], [x,y,z,w+len], [x+len,y,z,w+len], [x+len,y,z,w], [x+len,y+len,z,w], [x+len,y+len,z,w+len], [x,y+len,z,w+len], [x,y+len,z,w]])
-    // cube([[x+len,y+len,z+len,w+len], [x,y+len,z+len,w+len], [x,y,z+len,w+len], [x+len,y,z+len,w+len], [x+len,y,z,w+len], [x,y,z,w+len], [x,y+len,z,w+len], [x+len,y+len,z,w+len]])
-    // cube([[x+len,y+len,z+len,w+len], [x+len,y,z+len,w+len], [x+len,y,z,w+len], [x+len,y+len,z,w+len], [x+len,y+len,z,w], [x+len,y,z,w], [x+len,y,z+len,w], [x+len,y+len,z+len,w]])
-    // cube([[x+len,y+len,z+len,w+len], [x+len,y+len,z,w+len], [x+len,y+len,z,w], [x+len,y+len,z+len,w], [x,y+len,z+len,w], [x,y+len,z,w], [x,y+len,z,w+len], [x,y+len,z+len,w+len]])
-    // cube([[x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w], [x+len,y+len,z,w], [x,y+len,z+len,w+len], [x,y,z+len,w+len], [x,y,z+len,w], [x+len,y,z+len,w], [x+len,y,z+len,w+len]])
-    // cube([[x+len,y+len,z+len,w+len], [x+len,y,z+len,w+len], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len]])
-    // cube([[x+len,y+len,z+len,w+len], [x+len,y+len,z,w+len], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len]])
-    // cube([[x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len]])
-    
-    
-    // cube([[x,y,z,w], [x+len,y,z+len,w+len], [x,y,z,w], [x,y,z,w], [x,y,z,w], [x,y,z,w], [x,y,z,w], [x,y,z,w]])
-    // cube([[x,y,z,w], [x+len,y+len,z,w+len], [x,y,z,w], [x,y,z,w], [x,y,z,w], [x,y,z,w], [x,y,z,w], [x,y,z,w]])
-    // cube([[x,y,z,w], [x+len,y+len,z+len,w], [x,y,z,w], [x,y,z,w], [x,y,z,w], [x,y,z,w], [x,y,z,w], [x,y,z,w]])
+
 }
 
-function sponge(x, y, z, w, len, depth){
+function cantor(x, y, z, w, len, depth){
     if (depth <= 0){
-        // let hypercube = [];
-        // for (var i = 0; i<2; i++){
-        //     for (var j = 0; j<2; j++){
-        //         for (var k = 0; k<2; k++){
-        //             for (var l = 0; l<2; l++){
-        //                 // face.push(new Point(x + (len*i), y + (len*j), z + (len*k), w + (len*l)))
-        //                 hypercube.push(new Point(x + (len*i), y + (len*j), z + (len*k), w + (len*l)))
-        //                 // data.push(new Point(x + (len*i), y + (len*j), z + (len*k), w + (len*l)));
-        //             }
-        //         }
-        //     }
-        // }
-        // data.push(hypercube);
         tesseract(x,y,z,w,len)
     }else{
         for (var i = 0; i<2; i++){
             for (var j = 0; j<2; j++){
                 for (var k = 0; k<2; k++){
                     for (var l = 0; l<2; l++){
-                        sponge(x + (2*(len/3)*i), y + (2*(len/3)*j), z + (2*(len/3)*k), w + (2*(len/3)*l), len/3, depth-1)
+                        cantor(x + (2*(len/3)*i), y + (2*(len/3)*j), z + (2*(len/3)*k), w + (2*(len/3)*l), len/3, depth-1)
                     }
                 }
             }
@@ -146,7 +122,7 @@ function sponge(x, y, z, w, len, depth){
     }
 }
 
-sponge(-50, -50, -50, -50, 100, 2)
+cantor(-50, -50, -50, -50, 100, 1)
 // tesseract(-50, -50, -50, -50, 100)
 
 
@@ -165,9 +141,9 @@ function setup(){
     createCanvas(500,500, WEBGL);
     strokeWeight(1);
     stroke(255);
-    // noFill();
-    fill(0, 0, 255);
-    // fill(255, 0, 0, 10);
+    // // noFill();
+    // fill(255, 0, 255, 10);
+    fill(255, 0, 0);
 }
 
 function draw(){
