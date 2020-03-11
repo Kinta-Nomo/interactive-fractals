@@ -7,7 +7,7 @@ let resizerw = 100; //resize the projected points
 let playerPos = [0, 0, 0, -200];
 
 let angles = [0, 0, 0, 0, 0, 0] 
-let angleSpeeds = [0, 0.01, 0, 0, 0.01, 0];  
+let angleSpeeds = [0, 0.05, 0, 0, 0.05, 0];  
 
 
 function rotation4xy(x, y, z, w, a){
@@ -48,31 +48,23 @@ function rotation4zw(x, y, z, w, a){
 }
 
 
-Point = function(x=null, y=null, z=null, w=null){
-    this.origx = x;
-    this.origy = y;
-    this.origz = z;
-    this.origw = w;
-    this.x = x;
-    this.y = y;
-    this.z = z;
-    this.w = w;
-    this.dimension = (x!=null) + (y!=null) + (z!=null) + (w!=null);
+// Point = function(x=null, y=null, z=null, w=null){
+Point = function(coordinate){
+    this.origx = coordinate[0];
+    this.origy = coordinate[1];
+    this.origz = coordinate[2];
+    this.origw = coordinate[3];
+    this.x = coordinate[0];
+    this.y = coordinate[1];
+    this.z = coordinate[2];
+    this.w = coordinate[3];
+    // this.dimension = (x!=null) + (y!=null) + (z!=null) + (w!=null);
 
     this.draw = function(){
         projectedPoint = project4d(this.x, this.y, this.z, this.w)
-        dist = ((this.x-playerPos[0])**2+(this.y-playerPos[1])**2+(this.z-playerPos[2])**2+(this.w-playerPos[3])**2)**0.5
-        // translate(projectedPoint[0], projectedPoint[1], projectedPoint[2]);
-        // box();
-        strokeWeight(2);
+        // d = ((projectedPoint[0]-playerPos[0])**2+(projectedPoint[1]-playerPos[1])**2+(projectedPoint[2]-playerPos[2])**2)**0.5
+        // stroke(d*5)
         vertex(projectedPoint[0] * scaler, projectedPoint[1] * scaler, projectedPoint[2] * scaler)
-        // console.log( [projectedPoint[0], projectedPoint[1], projectedPoint[2]] )
-        // console.log(projectedPoint)
-        // projectedPoint2 = project3d(projectedPoint[0], projectedPoint[1], projectedPoint[2])
-        // dist3d = ((this.x-playerPos3[0])**2+(this.y-playerPos3[1])**2+(this.z-playerPos3[2])**2)**0.5;
-        // stroke(2550/dist3d);
-        // strokeWeight(1000/dist);
-        // point(projectedPoint2[0]*scaler, projectedPoint2[1]*scaler);
     }
 
     this.rotate = function(axy, axz, axw, ayz, ayw, azw){
@@ -90,36 +82,57 @@ Point = function(x=null, y=null, z=null, w=null){
 }
 
 let data = []
-// for (var i = 0; i<2; i++){
-//     for (var j = 0; j<2; j++){
-//         for (var k = 0; k<2; k++){
-//             // data.push(new Point(i*200-100, j*200-100, k*200-100));
-//             for (var l = 0; l<2; l++){
-//                 data.push(new Point(i*200-100, j*200-100, k*200-100, l*200-100));
-//             }
-//         }
-//     }
-// }
 
-function cube(){
+function cube(vertices){
+    data.push([new Point(vertices[0]), new Point(vertices[1]), new Point(vertices[2]), new Point(vertices[3])])
+    data.push([new Point(vertices[2]), new Point(vertices[3]), new Point(vertices[4]), new Point(vertices[5])])
+    data.push([new Point(vertices[4]), new Point(vertices[5]), new Point(vertices[6]), new Point(vertices[7])])
+    data.push([new Point(vertices[0]), new Point(vertices[1]), new Point(vertices[6]), new Point(vertices[7])])
+    data.push([new Point(vertices[1]), new Point(vertices[2]), new Point(vertices[5]), new Point(vertices[6])])
+    data.push([new Point(vertices[0]), new Point(vertices[3]), new Point(vertices[4]), new Point(vertices[7])])
+}
 
+function tesseract(x, y, z, w, len){
+    cube([[x,y,z,w], [x+len,y,z,w], [x+len,y+len,z,w], [x,y+len,z,w], [x,y+len,z+len,w], [x+len,y+len,z+len,w], [x+len,y,z+len,w], [x,y,z+len,w]])
+    cube([[x,y,z,w], [x,y+len,z,w], [x,y+len,z+len,w], [x,y,z+len,w], [x,y,z+len,w+len], [x,y+len,z+len,w+len], [x,y+len,z,w+len], [x,y,z,w+len]])
+    cube([[x,y,z,w], [x,y,z+len,w], [x,y,z+len,w+len], [x,y,z,w+len], [x+len,y,z,w+len], [x+len,y,z+len,w+len], [x+len,y,z+len,w], [x+len,y,z,w]])
+    cube([[x,y,z,w], [x,y,z,w+len], [x+len,y,z,w+len], [x+len,y,z,w], [x+len,y+len,z,w], [x+len,y+len,z,w+len], [x,y+len,z,w+len], [x,y+len,z,w]])
+    x+=len;y+=len;z+=len;w+=len;
+    len = -len
+    cube([[x,y,z,w], [x+len,y,z,w], [x+len,y+len,z,w], [x,y+len,z,w], [x,y+len,z+len,w], [x+len,y+len,z+len,w], [x+len,y,z+len,w], [x,y,z+len,w]])
+    cube([[x,y,z,w], [x,y+len,z,w], [x,y+len,z+len,w], [x,y,z+len,w], [x,y,z+len,w+len], [x,y+len,z+len,w+len], [x,y+len,z,w+len], [x,y,z,w+len]])
+    cube([[x,y,z,w], [x,y,z+len,w], [x,y,z+len,w+len], [x,y,z,w+len], [x+len,y,z,w+len], [x+len,y,z+len,w+len], [x+len,y,z+len,w], [x+len,y,z,w]])
+    cube([[x,y,z,w], [x,y,z,w+len], [x+len,y,z,w+len], [x+len,y,z,w], [x+len,y+len,z,w], [x+len,y+len,z,w+len], [x,y+len,z,w+len], [x,y+len,z,w]])
+    // cube([[x+len,y+len,z+len,w+len], [x,y+len,z+len,w+len], [x,y,z+len,w+len], [x+len,y,z+len,w+len], [x+len,y,z,w+len], [x,y,z,w+len], [x,y+len,z,w+len], [x+len,y+len,z,w+len]])
+    // cube([[x+len,y+len,z+len,w+len], [x+len,y,z+len,w+len], [x+len,y,z,w+len], [x+len,y+len,z,w+len], [x+len,y+len,z,w], [x+len,y,z,w], [x+len,y,z+len,w], [x+len,y+len,z+len,w]])
+    // cube([[x+len,y+len,z+len,w+len], [x+len,y+len,z,w+len], [x+len,y+len,z,w], [x+len,y+len,z+len,w], [x,y+len,z+len,w], [x,y+len,z,w], [x,y+len,z,w+len], [x,y+len,z+len,w+len]])
+    // cube([[x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w], [x+len,y+len,z,w], [x,y+len,z+len,w+len], [x,y,z+len,w+len], [x,y,z+len,w], [x+len,y,z+len,w], [x+len,y,z+len,w+len]])
+    // cube([[x+len,y+len,z+len,w+len], [x+len,y,z+len,w+len], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len]])
+    // cube([[x+len,y+len,z+len,w+len], [x+len,y+len,z,w+len], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len]])
+    // cube([[x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len], [x+len,y+len,z+len,w+len]])
+    
+    
+    // cube([[x,y,z,w], [x+len,y,z+len,w+len], [x,y,z,w], [x,y,z,w], [x,y,z,w], [x,y,z,w], [x,y,z,w], [x,y,z,w]])
+    // cube([[x,y,z,w], [x+len,y+len,z,w+len], [x,y,z,w], [x,y,z,w], [x,y,z,w], [x,y,z,w], [x,y,z,w], [x,y,z,w]])
+    // cube([[x,y,z,w], [x+len,y+len,z+len,w], [x,y,z,w], [x,y,z,w], [x,y,z,w], [x,y,z,w], [x,y,z,w], [x,y,z,w]])
 }
 
 function sponge(x, y, z, w, len, depth){
     if (depth <= 0){
-        let hypercube = [];
-        for (var i = 0; i<2; i++){
-            for (var j = 0; j<2; j++){
-                for (var k = 0; k<2; k++){
-                    for (var l = 0; l<2; l++){
-                        // face.push(new Point(x + (len*i), y + (len*j), z + (len*k), w + (len*l)))
-                        hypercube.push(new Point(x + (len*i), y + (len*j), z + (len*k), w + (len*l)))
-                        // data.push(new Point(x + (len*i), y + (len*j), z + (len*k), w + (len*l)));
-                    }
-                }
-            }
-        }
-        data.push(hypercube);
+        // let hypercube = [];
+        // for (var i = 0; i<2; i++){
+        //     for (var j = 0; j<2; j++){
+        //         for (var k = 0; k<2; k++){
+        //             for (var l = 0; l<2; l++){
+        //                 // face.push(new Point(x + (len*i), y + (len*j), z + (len*k), w + (len*l)))
+        //                 hypercube.push(new Point(x + (len*i), y + (len*j), z + (len*k), w + (len*l)))
+        //                 // data.push(new Point(x + (len*i), y + (len*j), z + (len*k), w + (len*l)));
+        //             }
+        //         }
+        //     }
+        // }
+        // data.push(hypercube);
+        tesseract(x,y,z,w,len)
     }else{
         for (var i = 0; i<2; i++){
             for (var j = 0; j<2; j++){
@@ -133,7 +146,9 @@ function sponge(x, y, z, w, len, depth){
     }
 }
 
-sponge(-50, -50, -50, -50, 100, 1)
+sponge(-50, -50, -50, -50, 100, 2)
+// tesseract(-50, -50, -50, -50, 100)
+
 
 //=====projectors=====
 
@@ -148,9 +163,11 @@ function project4d(x, y, z, w){
 
 function setup(){
     createCanvas(500,500, WEBGL);
-    strokeWeight(5);
+    strokeWeight(1);
     stroke(255);
-    fill(255, 0, 0);
+    // noFill();
+    fill(0, 0, 255);
+    // fill(255, 0, 0, 10);
 }
 
 function draw(){
