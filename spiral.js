@@ -14,7 +14,10 @@ let nextCircleDistance = 0;
 let showCircle = true;
 let showPath = true;
 
+let circleId = -1;
+
 function updateSpirograph(){
+  circleId = -1
     vertices = [];
     size = nextSize;
     circleDistance = nextCircleDistance;
@@ -32,6 +35,13 @@ Circle = function(x, y, r, depth){
   this.depth = depth;
 
   this.child = []
+  
+  this.id;
+  if (this.depth == 0){
+    circleId ++;
+    this.id = circleId
+    vertices.push([])
+  }
 
   this.draw = function(){
     ellipse(this.x, this.y, this.radius*2);
@@ -60,7 +70,7 @@ Circle = function(x, y, r, depth){
       this.child[i].rotateChild()
       if (this.depth == 1){
         if (mom.angle < (Math.PI*2)/size){  
-            vertices.push([this.child[i].x, this.child[i].y])
+            vertices[this.child[i].id].push([this.child[i].x, this.child[i].y])
         }
       }
     }
@@ -78,14 +88,22 @@ function setup() {
 
 function draw() {
   background(220);
-  strokeWeight(2);
+  strokeWeight(1);
 
   if (showPath){
     for (var i in vertices){
-       vert = vertices[i];
-       set(vert[0], vert[1] , 0)
+    // for (var i in [0]){
+      beginShape();
+      for (var j in vertices[i]){
+        vert = vertices[i][j];
+        vertex(vert[0], vert[1] , 0)
+      }
+      endShape();
+      // // console.log(i)
+      //  vert = vertices[i];
+      //  vertex(vert[0], vert[1] , 0)
     }
-    updatePixels();
+    // updatePixels();
   }
   
   noFill();

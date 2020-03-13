@@ -142,8 +142,8 @@ function setup(){
     strokeWeight(1);
     stroke(255);
     // // noFill();
-    // fill(255, 0, 255, 10);
-    fill(255, 0, 0);
+    fill(255, 0, 255, 10);
+    // fill(255, 0, 0);
 }
 
 function draw(){
