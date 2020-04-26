@@ -90,7 +90,7 @@ function cube(vertices){
     data.push([new Point(vertices[0]), new Point(vertices[1]), new Point(vertices[6]), new Point(vertices[7])])
     data.push([new Point(vertices[1]), new Point(vertices[2]), new Point(vertices[5]), new Point(vertices[6])])
     data.push([new Point(vertices[0]), new Point(vertices[3]), new Point(vertices[4]), new Point(vertices[7])])
-}3
+}
 
 function tesseract(x, y, z, w, len){
     cube([[x,y,z,w], [x+len,y,z,w], [x+len,y+len,z,w], [x,y+len,z,w], [x,y+len,z+len,w], [x+len,y+len,z+len,w], [x+len,y,z+len,w], [x,y,z+len,w]])
@@ -103,7 +103,6 @@ function tesseract(x, y, z, w, len){
     cube([[x,y,z,w], [x,y+len,z,w], [x,y+len,z+len,w], [x,y,z+len,w], [x,y,z+len,w+len], [x,y+len,z+len,w+len], [x,y+len,z,w+len], [x,y,z,w+len]])
     cube([[x,y,z,w], [x,y,z+len,w], [x,y,z+len,w+len], [x,y,z,w+len], [x+len,y,z,w+len], [x+len,y,z+len,w+len], [x+len,y,z+len,w], [x+len,y,z,w]])
     cube([[x,y,z,w], [x,y,z,w+len], [x+len,y,z,w+len], [x+len,y,z,w], [x+len,y+len,z,w], [x+len,y+len,z,w+len], [x,y+len,z,w+len], [x,y+len,z,w]])
-
 }
 
 function cantor(x, y, z, w, len, depth){
@@ -122,7 +121,7 @@ function cantor(x, y, z, w, len, depth){
     }
 }
 
-cantor(-50, -50, -50, -50, 100, 1)
+cantor(-50, -50, -50, -50, 100, 0)
 // tesseract(-50, -50, -50, -50, 100)
 
 
